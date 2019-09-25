@@ -1,24 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import {Route, Link, Switch } from "react-router-dom";
+import IssuesList from "./components/issues/IssuesList";
+import CreateIssue from "./components/issues/CreateIssue";
+import EditIssue from "./components/issues/EditIssue";
+
+import "./App.css";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="container">
+        <div className="header">
+          <h1>Issue tracker</h1>
+          <p>
+            Using <b>React flexible</b> layout.{" "}
+          </p>
+        </div>
+        <div className="navbar">
+          <Link to="/issues">Issues</Link>
+          <Link to="/issues/create">New</Link>
+          <Link to="/issues/edit">Edit</Link>
+        </div>
+
+          <Switch>
+            <Route>
+              <Route exact path="/issues" component={IssuesList} />
+              <Route exact path="/issues/create" component={CreateIssue} />
+              <Route exact path="/issues/edit" component={EditIssue} />
+            </Route>
+          </Switch>
+      </div>
     </div>
   );
 }
