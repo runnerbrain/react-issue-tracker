@@ -1,11 +1,11 @@
-import React, { Component, useState } from "react";
+import React, { Component } from "react";
+import { Redirect } from 'react-router-dom';
 import DatePicker from "react-datepicker";
 import axios from 'axios';
 
 import "react-datepicker/dist/react-datepicker.css";
 
 class CreateIssue extends Component {
-  // const [selectedDate, handleDateChange] = useState(new Date());
 
   state = {
     title: '',
@@ -13,7 +13,8 @@ class CreateIssue extends Component {
     date_created: new Date(),
     lead_contributor: '',
     backup_contributor: '',
-    description: ''
+    description: '',
+    toList : false
   };
 
   handleSubmit = event => {
@@ -28,7 +29,11 @@ class CreateIssue extends Component {
       description: this.state.description
     }
     axios.post('http://localhost:5000/issues/add',issue)
-      .then(res => res.data)
+      .then( res => {
+        this.setState({toList: true});
+        return res.data;
+      })
+    
   };
 
   handleChange = date => {
@@ -46,6 +51,10 @@ class CreateIssue extends Component {
   }
 
   render() {
+    if(this.state.toList === true){
+      return <Redirect to='/' />
+    }
+
     return (
       <div className="wrapper">
         <form onSubmit={this.handleSubmit}>
