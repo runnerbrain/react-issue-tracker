@@ -7,6 +7,12 @@ import "react-datepicker/dist/react-datepicker.css";
 
 class CreateIssue extends Component {
 
+  formStyle={
+    display: 'flex',
+    flexDirection: 'column',
+    backgroundColor: '#ddd'
+  }
+
   state = {
     title: '',
     category: '',
@@ -37,7 +43,8 @@ class CreateIssue extends Component {
   };
 
   handleChange = date => {
-    this.setState({ startDate: date });
+    console.log(date)
+    this.setState({ date_created: date });
   };
 
   handleInputChange = event => {
@@ -56,12 +63,11 @@ class CreateIssue extends Component {
     }
 
     return (
-      <div className="wrapper">
-        <form onSubmit={this.handleSubmit}>
+        <form style={this.formStyle} onSubmit={this.handleSubmit}>
           <div className="row">
             <div className="column">
               <div className="centered-content">
-                <label htmlFor="title">Title</label>
+                <label htmlFor="title">Title</label>  
                 <input type="text" id="title" name="title" label="Title" margin="normal" onChange={this.handleInputChange} placeholder="What's your issue..."/>
               </div>
             </div>
@@ -109,7 +115,7 @@ class CreateIssue extends Component {
           <div className="row">
             <div className="column">
               <label htmlFor="">Description</label>
-              <textarea rows="6" name="description" onChange={this.handleInputChange} />
+              <textarea rows="6" name="description" onChange={this.handleInputChange} />  
             </div>
           </div>
           <div className="row">
@@ -118,7 +124,6 @@ class CreateIssue extends Component {
             </div>
           </div>
         </form>
-      </div>
     );
   }
 }

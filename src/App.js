@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import IssuesList from "./components/issues/IssuesList";
 import CreateIssue from "./components/issues/CreateIssue";
 import EditIssue from "./components/issues/EditIssue";
@@ -8,24 +8,30 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
 function App() {
-  return (  
+
+  const linksStyle={
+    paddingRight: '20px'
+  }
+
+  return (
     <div className="App">
-      <div className="container-fluid">
+      <div className="wrapper">
         <div className="header">
           <h1>Issue tracker</h1>
         </div>
         <Router>
           <div className="navbar">
-            <Link to="/issues">Issues</Link>
-            <Link to="/issues/create">New</Link>
-            <Link to="/issues/edit">Edit</Link>
+            <div className="leftLinks" style={linksStyle} >
+              <Link to="/issues">Issues</Link>
+              <Link to="/issues/create">New</Link>
+            </div>
           </div>
-          <Route>
+          <Switch>
             <Route exact path="/" component={IssuesList} />
             <Route exact path="/issues" component={IssuesList} />
             <Route exact path="/issues/create" component={CreateIssue} />
             <Route exact path="/issues/edit/:id" component={EditIssue} />
-          </Route>
+          </Switch>
         </Router>
       </div>
     </div>
