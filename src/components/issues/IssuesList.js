@@ -1,11 +1,12 @@
-import React, { Component, Fragment } from "react";
-import { Link } from "react-router-dom";
-import Axios from "axios";
-import TimeAgo from "react-timeago";
+import React, { Component, Fragment } from 'react';
+import { Link } from 'react-router-dom';
+import Axios from 'axios';
+import TimeAgo from 'react-timeago';
 import 'font-awesome/css/font-awesome.min.css';
 
 const Issues = props => {
   const { issue, deleteIssue } = props;
+  // console.log(issue._id);
   return (
     <tr>
       <td>{issue.title}</td>
@@ -15,10 +16,14 @@ const Issues = props => {
       <td>{issue.backup_contributor}</td>
       <td>
         <Link to={`/issues/edit/${issue._id}`}>
-        <i class="fa fa-edit"></i>
+          <i className="fa fa-edit"></i>
         </Link>
         <Link to={`/issues`}>
-        <i class="fa fa-trash" aria-hidden="true"  onClick={() => deleteIssue(issue._id)}></i>
+          <i
+            className="fa fa-trash"
+            aria-hidden="true"
+            onClick={() => deleteIssue(issue._id)}
+          ></i>
         </Link>
       </td>
     </tr>
@@ -34,7 +39,7 @@ class IssuesList extends Component {
   }
 
   componentDidMount() {
-    Axios.get("http://localhost:5000/issues")
+    Axios.get('http://localhost:5000/issues')
       .then(res => this.setState({ issues: res.data }))
       .catch(err => console.log(err));
   }
