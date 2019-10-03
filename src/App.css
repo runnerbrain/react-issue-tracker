@@ -17,6 +17,7 @@
 .navbar{
   display: flex;
   background-color: #333;
+  color: #999;
 }
 
 .navbar a{
@@ -80,5 +81,9 @@ input[type=submit] {
 
 input[type=submit]:hover {
   background-color: #45a049;
+}
+
+i{
+  padding: 5px;
 }
 

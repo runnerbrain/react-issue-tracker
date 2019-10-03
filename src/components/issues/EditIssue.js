@@ -1,23 +1,24 @@
-import React, { Component, Fragment } from 'react';
-import Axios from 'axios';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+import React, { Component} from "react";
+import { Redirect } from 'react-router-dom';
+import Axios from "axios";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 class EditIssue extends Component {
   formStyle = {
-    display: 'flex',
-    flexDirection: 'column',
-    backgroundColor: '#ddd'
+    display: "flex",
+    flexDirection: "column",
+    backgroundColor: "#ddd"
   };
 
   state = {
-    title: '',
-    category: '',
+    title: "",
+    category: "",
     date_created: new Date(),
-    lead_contributor: '',
-    backup_contributor: '',
-    description: '',
-    toList: false
+    lead_contributor: "",
+    backup_contributor: "",
+    description: "",
+    toList : false
   };
 
   componentDidMount() {
@@ -36,24 +37,60 @@ class EditIssue extends Component {
       .catch(err => console.log(err));
   }
 
+  handleSubmit = (event) => {
+    event.preventDefault();
+    const issue = {
+      title: this.state.title,
+      category: this.state.category,
+      date_created: this.state.date_created,
+      lead_contributor: this.state.lead_contributor,
+      backup_contributor: this.state.backup_contributor,
+      description: this.state.description
+    }
+
+    Axios.put(`http://localhost:5000/issues/edit/${this.props.match.params.id}`,issue)
+    .then(res => {
+      this.setState({toList: true});
+      return res.data;
+    })
+    .catch(err => console.log('Error editing -- '+err));
+  }
+
+  handleChange = date => {
+    console.log(date)
+    this.setState({ date_created: date });
+  };
+
+  handleInputChange = event => {
+    const target = event.target;
+    const name = target.name;
+    const value = target.value;
+
+    this.setState({
+      [name] : value
+    })
+  }
+
   render() {
+    if(this.state.toList === true){
+      return <Redirect to='/' />
+    }
+
     return (
       <form style={this.formStyle} onSubmit={this.handleSubmit}>
         <div className="row">
           <div className="column">
-            <div className="centered-content">
-              <label htmlFor="title">Title</label>
-              <input
-                type="text"
-                id="title"
-                name="title"
-                label="Title"
-                margin="normal"
-                onChange={this.handleInputChange}
-                placeholder="What's your issue..."
-                value={this.state.title}
-              />
-            </div>
+            <label htmlFor="title">Titre</label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              label="Title"
+              margin="normal"
+              onChange={this.handleInputChange}
+              placeholder="What's your issue..."
+              value={this.state.title}
+            />
           </div>
         </div>
         <div className="row">
@@ -66,18 +103,17 @@ class EditIssue extends Component {
               onChange={this.handleInputChange}
             >
               <option value="" />
-              <option value={'PACS'}>PACS</option>
-              <option value={'FFI'}>FFI</option>
-              <option value={'Networking'}>Networking</option>
+              <option value={"PACS"}>PACS</option>
+              <option value={"FFI"}>FFI</option>
+              <option value={"Networking"}>Networking</option>
             </select>
             <label htmlFor="date_created">Date</label>
             <DatePicker
               id="date_created"
               selected={this.state.date_created}
-              onChange={this.handleChange}
-              name="date_created"
               value={this.state.date_created}
-              calendarAriaLabel
+              onChange={this.handleChange}
+              autoComplete="off"
             />
           </div>
 
@@ -91,10 +127,10 @@ class EditIssue extends Component {
               onChange={this.handleInputChange}
             >
               <option value="" />
-              <option value={'Mahmoud'}>Mahmoud</option>
-              <option value={'Samra'}>Samra</option>
-              <option value={'Booboo'}>Booboo</option>
-              <option value={'Munai'}>Munai</option>
+              <option value={"Mahmoud"}>Mahmoud</option>
+              <option value={"Samra"}>Samra</option>
+              <option value={"Booboo"}>Booboo</option>
+              <option value={"Munai"}>Munai</option>
             </select>
             <label htmlFor="backup_contributor">Backup Contributor</label>
 
@@ -105,10 +141,10 @@ class EditIssue extends Component {
               onChange={this.handleInputChange}
             >
               <option value="" />
-              <option value={'Mahmoud'}>Mahmoud</option>
-              <option value={'Samra'}>Samra</option>
-              <option value={'Booboo'}>Booboo</option>
-              <option value={'Munai'}>Munai</option>
+              <option value={"Mahmoud"}>Mahmoud</option>
+              <option value={"Samra"}>Samra</option>
+              <option value={"Booboo"}>Booboo</option>
+              <option value={"Munai"}>Munai</option>
             </select>
           </div>
         </div>
