@@ -3,15 +3,15 @@ import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import IssuesList from "./components/issues/IssuesList";
 import CreateIssue from "./components/issues/CreateIssue";
 import EditIssue from "./components/issues/EditIssue";
+
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import "./App.css";
 
 function App() {
-
-  const linksStyle={
-    paddingRight: '20px'
-  }
+  const linksStyle = {
+    paddingRight: "20px"
+  };
 
   return (
     <div className="App">
@@ -21,9 +21,14 @@ function App() {
         </div>
         <Router>
           <div className="navbar">
-            <div className="leftLinks" style={linksStyle} >
-              <Link to="/issues">Issues</Link>
-              <Link to="/issues/create">New</Link>
+            <div className="leftLinks" style={linksStyle}>
+              <Link to="/issues">
+                {" "}
+                <i class="material-icons">list</i>
+              </Link>
+              <Link to="/issues/create">
+                <i class="material-icons">add</i>
+              </Link>
             </div>
           </div>
           <Switch>

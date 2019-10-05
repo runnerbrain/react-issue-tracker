@@ -28,8 +28,8 @@
 }
 
 .navbar a:hover{
-  background-color: #ddd;
-  color: black;
+  font-size: larger ;
+  color: grey;
 }
 
 

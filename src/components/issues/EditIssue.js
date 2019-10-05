@@ -80,7 +80,7 @@ class EditIssue extends Component {
       <form style={this.formStyle} onSubmit={this.handleSubmit}>
         <div className="row">
           <div className="column">
-            <label htmlFor="title">Titre</label>
+            <label htmlFor="title">Title</label>
             <input
               type="text"
               id="title"

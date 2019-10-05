@@ -2,11 +2,14 @@ import React, { Component, Fragment } from "react";
 import { Link } from "react-router-dom";
 import Axios from "axios";
 import TimeAgo from "react-timeago";
-import "font-awesome/css/font-awesome.min.css";
+import CommentModal from './../comments/CommentModal';
+// import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
-const Issues = props => {
-  const { issue, deleteIssue } = props;
-  // console.log(issue._id);
+
+
+const Issue = props => {
+  const { issue, deleteIssue, showComment  } = props;
+
   return (
     <tr>
       <td>{issue.title}</td>
@@ -16,17 +19,17 @@ const Issues = props => {
       <td>{issue.backup_contributor}</td>
       <td>
         <Link to={`/issues/edit/${issue._id}`}>
-          <i className="fa fa-edit"></i>
+          <i class="material-icons">edit</i>
         </Link>
         <Link to={`/issues`}>
-          <i
-            className="fa fa-trash"
-            aria-hidden="true"
-            onClick={() => deleteIssue(issue._id)}
-          ></i>
+          <i class="material-icons" onClick={ () => deleteIssue(issue._id)}>
+            delete
+          </i>
         </Link>
-        <Link to={"/issues"}>
-          <i className="fa fa-comment"></i>
+        <Link to={`/#`}>
+          <i class="material-icons" onClick={ () => showComment(issue._id)} >
+            comment
+          </i>
         </Link>
       </td>
     </tr>
@@ -37,22 +40,33 @@ class IssuesList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      issues: []
+      issues: [],
+      modal: false
     };
   }
+
+  handleClose = () => {
+    this.setState({ commentShow: false });
+  };
+
+  handleShow = () => {
+    this.setState({ commentShow: true });
+  };
 
   componentDidMount() {
     Axios.get("http://localhost:5000/issues")
       .then(res => this.setState({ issues: res.data }))
       .catch(err => console.log(err));
+
   }
 
   issuesList() {
     return this.state.issues.map(currentIssue => (
-      <Issues
+      <Issue
         issue={currentIssue}
         key={currentIssue._id}
         deleteIssue={this.deleteIssue}
+        showComment={this.showComment}
       />
     ));
   }
@@ -64,6 +78,13 @@ class IssuesList extends Component {
     this.setState({
       issues: this.state.issues.filter(el => el._id !== id)
     });
+  };
+
+  showComment = id => {
+    console.log("This is comment for " + id);
+    this.setState(prevState => ({modal: !prevState.modal}));
+    console.log(`showComment is: ${this.state.modal}`);
+   
   };
 
   render() {
@@ -85,6 +106,8 @@ class IssuesList extends Component {
             <tbody>{this.issuesList()}</tbody>
           </table>
         </div>
+        <CommentModal modal={this.state.modal} showComment={this.showComment}/>
+        
       </Fragment>
     );
   }
