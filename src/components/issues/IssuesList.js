@@ -2,13 +2,11 @@ import React, { Component, Fragment } from "react";
 import { Link } from "react-router-dom";
 import Axios from "axios";
 import TimeAgo from "react-timeago";
-import CommentModal from './../comments/CommentModal';
+import CommentModal from "./../comments/CommentModal";
 // import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
-
-
 const Issue = props => {
-  const { issue, deleteIssue, showComment  } = props;
+  const { issue, deleteIssue, showCommentForm } = props;
 
   return (
     <tr>
@@ -19,15 +17,18 @@ const Issue = props => {
       <td>{issue.backup_contributor}</td>
       <td>
         <Link to={`/issues/edit/${issue._id}`}>
-          <i class="material-icons">edit</i>
+          <i className="material-icons">edit</i>
         </Link>
         <Link to={`/issues`}>
-          <i class="material-icons" onClick={ () => deleteIssue(issue._id)}>
+          <i className="material-icons" onClick={() => deleteIssue(issue._id)}>
             delete
           </i>
         </Link>
         <Link to={`/#`}>
-          <i class="material-icons" onClick={ () => showComment(issue._id)} >
+          <i
+            className="material-icons"
+            onClick={() => showCommentForm(issue._id)}
+          >
             comment
           </i>
         </Link>
@@ -36,11 +37,14 @@ const Issue = props => {
   );
 };
 
+//====================================================================
+
 class IssuesList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       issues: [],
+      comments: [],
       modal: false
     };
   }
@@ -55,9 +59,10 @@ class IssuesList extends Component {
 
   componentDidMount() {
     Axios.get("http://localhost:5000/issues")
-      .then(res => this.setState({ issues: res.data }))
+      .then(res => {
+        this.setState({ issues: res.data });
+      })
       .catch(err => console.log(err));
-
   }
 
   issuesList() {
@@ -66,7 +71,8 @@ class IssuesList extends Component {
         issue={currentIssue}
         key={currentIssue._id}
         deleteIssue={this.deleteIssue}
-        showComment={this.showComment}
+        showCommentForm={this.showCommentForm}
+        comments={currentIssue.comments}
       />
     ));
   }
@@ -80,11 +86,15 @@ class IssuesList extends Component {
     });
   };
 
-  showComment = id => {
-    console.log("This is comment for " + id);
-    this.setState(prevState => ({modal: !prevState.modal}));
-    console.log(`showComment is: ${this.state.modal}`);
-   
+  showCommentForm = id => {
+
+    //console.log("This is comment for " + id);
+    this.setState(prevState => ({ modal: !prevState.modal }));
+    if (!this.state.modal) {
+      var issue = this.state.issues.find(el => el._id === id);
+      this.setState({ comments: issue.comments });
+    }
+    //console.log(`showComment is: ${this.state.modal}`);
   };
 
   render() {
@@ -106,8 +116,11 @@ class IssuesList extends Component {
             <tbody>{this.issuesList()}</tbody>
           </table>
         </div>
-        <CommentModal modal={this.state.modal} showComment={this.showComment}/>
-        
+        <CommentModal
+          modal={this.state.modal}
+          showCommentForm={this.showCommentForm}
+          comments={this.state.comments}
+        />
       </Fragment>
     );
   }

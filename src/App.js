@@ -24,10 +24,10 @@ function App() {
             <div className="leftLinks" style={linksStyle}>
               <Link to="/issues">
                 {" "}
-                <i class="material-icons">list</i>
+                <i className="material-icons">list</i>
               </Link>
               <Link to="/issues/create">
-                <i class="material-icons">add</i>
+                <i className="material-icons">add</i>
               </Link>
             </div>
           </div>

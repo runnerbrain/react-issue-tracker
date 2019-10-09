@@ -1,33 +1,60 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import axios from "axios";
 
-const CommentModal = props => {
-  console.log(props);
+const CommentModal = ({ modal, showCommentForm, comments, toggle }) => {
+  console.log(comments[1]);
+
+  //const [comments,setComments] = useState({comments: []});
+
+  const expandTA = e => {
+    document.getElementById(e.target.id).setAttribute("width", "80%");
+  };
+
+  const handleCommentSubmit = e => {
+    e.preventDefault();
+    console.log("submitting something");
+  };
+
   return (
     <Fragment>
       <Modal
-        isOpen={props.modal}
-        toggle={props.showComment}
-        // className={this.props.className}
+        isOpen={modal}
+        toggle={showCommentForm}
+        className="modal-dialog modal-lg"
       >
-        <ModalHeader toggle={props.toggle}>Modal title</ModalHeader>
-        <ModalBody>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum.
+        <ModalHeader toggle={toggle}>Modal title</ModalHeader>
+        <ModalBody className="modal-content">
+          <form onSubmit={e => handleCommentSubmit(e)}>
+            <div>
+              <textarea
+                id="comment-ta"
+                cols="20"
+                rows="1"
+                onFocus={e => expandTA(e)}
+              />
+            </div>
+            <button>Save</button>
+          </form>
         </ModalBody>
         <ModalFooter>
-          <Button color="primary" onClick={props.showComment}>
+          <Button color="primary" onClick={showCommentForm}>
             Do Something
           </Button>{" "}
-          <Button color="secondary" onClick={props.showComment}>
+          <Button color="secondary" onClick={showCommentForm}>
             Cancel
           </Button>
         </ModalFooter>
+
+        <div>
+          {comments.map(el => {
+            return (
+              <div className="comment-card">
+                <div className="comment-container">{el.comment}</div>
+              </div>
+            );
+          })}
+        </div>
       </Modal>
     </Fragment>
   );
