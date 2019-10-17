@@ -1,19 +1,20 @@
-import React, { Fragment, useEffect, useState } from "react";
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
-import axios from "axios";
+import React, { Fragment, useState } from "react";
+import { Modal, ModalHeader, ModalBody } from "reactstrap";
+import TimeAgo from "react-timeago";
 
-const CommentModal = ({ modal, showCommentForm, comments, toggle }) => {
-  console.log(comments[1]);
+const CommentModal = ({
+  modal,
+  showCommentForm,
+  comments,
+  toggle,
+  onSaveComment,
+  selectedIssue
+}) => {
+  const [comment, setComment] = useState("");
 
-  //const [comments,setComments] = useState({comments: []});
-
-  const expandTA = e => {
-    document.getElementById(e.target.id).setAttribute("width", "80%");
-  };
-
-  const handleCommentSubmit = e => {
-    e.preventDefault();
-    console.log("submitting something");
+  const handleChange = e => {
+    setComment(e.target.value);
+    // console.log(comment);
   };
 
   return (
@@ -23,33 +24,42 @@ const CommentModal = ({ modal, showCommentForm, comments, toggle }) => {
         toggle={showCommentForm}
         className="modal-dialog modal-lg"
       >
-        <ModalHeader toggle={toggle}>Modal title</ModalHeader>
+        <div className="close-icon">
+          <i className="material-icons" onClick={showCommentForm}>
+            close
+          </i>
+        </div>
+        <ModalHeader toggle={toggle}>{selectedIssue.title}</ModalHeader>
         <ModalBody className="modal-content">
-          <form onSubmit={e => handleCommentSubmit(e)}>
+          <form>
             <div>
               <textarea
-                id="comment-ta"
                 cols="20"
                 rows="1"
-                onFocus={e => expandTA(e)}
+                value={comment}
+                onChange={handleChange}
               />
             </div>
-            <button>Save</button>
+            <button
+              className="btn btn-secondary"
+              onClick={e => {
+                e.preventDefault();
+                onSaveComment(comment);
+                setComment("");
+              }}
+            >
+              Save
+            </button>
           </form>
         </ModalBody>
-        <ModalFooter>
-          <Button color="primary" onClick={showCommentForm}>
-            Do Something
-          </Button>{" "}
-          <Button color="secondary" onClick={showCommentForm}>
-            Cancel
-          </Button>
-        </ModalFooter>
-
-        <div>
+        <div className="comments">
           {comments.map(el => {
             return (
               <div className="comment-card">
+                <div className="comment-info">
+                    <div className="comment-created-at"><TimeAgo date={el.created_at} /></div>
+                    <span className="user-comment" ><i className="material-icons">person</i></span>
+                </div>
                 <div className="comment-container">{el.comment}</div>
               </div>
             );

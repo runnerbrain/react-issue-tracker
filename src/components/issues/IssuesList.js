@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import Axios from "axios";
 import TimeAgo from "react-timeago";
 import CommentModal from "./../comments/CommentModal";
-// import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 const Issue = props => {
   const { issue, deleteIssue, showCommentForm } = props;
@@ -20,7 +19,7 @@ const Issue = props => {
           <i className="material-icons">edit</i>
         </Link>
         <Link to={`/issues`}>
-          <i className="material-icons" onClick={() => deleteIssue(issue._id)}>
+          <i className="material-icons" onClick={() => { if (window.confirm('Are you sure you wish to delete this item?'))deleteIssue(issue._id)}}>
             delete
           </i>
         </Link>
@@ -45,7 +44,10 @@ class IssuesList extends Component {
     this.state = {
       issues: [],
       comments: [],
-      modal: false
+      modal: false,
+      issue_id: "",
+      selectedIssue: {},
+      created_at: Date()
     };
   }
 
@@ -72,7 +74,6 @@ class IssuesList extends Component {
         key={currentIssue._id}
         deleteIssue={this.deleteIssue}
         showCommentForm={this.showCommentForm}
-        comments={currentIssue.comments}
       />
     ));
   }
@@ -87,14 +88,31 @@ class IssuesList extends Component {
   };
 
   showCommentForm = id => {
-
-    //console.log("This is comment for " + id);
     this.setState(prevState => ({ modal: !prevState.modal }));
     if (!this.state.modal) {
-      var issue = this.state.issues.find(el => el._id === id);
-      this.setState({ comments: issue.comments });
+      var selectedIssue= this.state.issues.find(el => el._id === id);
+      this.setState({ comments: selectedIssue.comments });
+      this.setState({ issue_id: id });
+      this.setState({selectedIssue});
     }
-    //console.log(`showComment is: ${this.state.modal}`);
+  };
+
+  handleCommentSave = comment => {
+    const commentObj = {
+      comment: comment,
+      created_at: this.state.created_at,
+      issue_id: this.state.issue_id
+    };
+    Axios.post(
+      `http://localhost:5000/issues/${commentObj.issue_id}/comments/add`,
+      commentObj
+    )
+      .then(res => {
+        this.setState({ comments: res.data.comments });
+        return res.data;
+      })
+      .catch(err => console.log("Error submitting comment: " + err));
+
   };
 
   render() {
@@ -116,11 +134,17 @@ class IssuesList extends Component {
             <tbody>{this.issuesList()}</tbody>
           </table>
         </div>
-        <CommentModal
-          modal={this.state.modal}
-          showCommentForm={this.showCommentForm}
-          comments={this.state.comments}
-        />
+        <div className="modal-container">
+          <CommentModal
+            modal={this.state.modal}
+            comments={this.state.comments}
+            value={this.state.newComment}
+            onTextAreaChange={this.handleTextAreaChange}
+            showCommentForm={this.showCommentForm}
+            onSaveComment={this.handleCommentSave}
+            selectedIssue = {this.state.selectedIssue}
+          />
+        </div>
       </Fragment>
     );
   }

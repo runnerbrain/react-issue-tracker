@@ -10,7 +10,7 @@ const issueSchema = new Schema({
     backup_contributor: {type: String, required: false},
     description: {type: String, required: true},
     comments: [{
-        _id: false,
+        _id: Schema.Types.ObjectId,
         comment: String,
         created_at: {type: Date, Default: Date.now}
     }]

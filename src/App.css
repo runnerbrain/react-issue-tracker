@@ -2,6 +2,11 @@
   box-sizing: border-box;
 }
 
+html{
+  margin: 0;
+  padding: 0;
+}
+
 
 .wrapper{
   display: flex;
@@ -95,11 +100,28 @@ textarea{
   /* transition: all 0.5s; */
 }
 
+.close-icon{
+  position: absolute;
+  top: 8px; 
+  right: 8px;
+  cursor: pointer;
+}
+
+.comments{
+  padding: 6px;
+  margin-top: 12px; 
+}
+
 .comment-card {
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  position : relative;
+  border : 1px solid grey; 
   transition: 0.3s;
   width: 100%;
   border-radius: 4px;
+  /* padding: 30px 2px 0px 2px; */
+  margin-top: 10px;
+
 }
 
 .comment-card:hover {
@@ -107,5 +129,22 @@ textarea{
 }
 
 .comment-container {
-  padding: 2px 16px;
+}
+
+.comment-info{
+  /* position: absolute; */
+  /* top: 1px; */
+  /* right: 2px; */
+  display: flex;
+  justify-content: flex-end;
+  font-size: 12px;
+  color: grey;
+}
+
+.comment-created-at{
+  align-self: center;
+}
+
+.user-comment{
+  padding: 0px 3px;
 }

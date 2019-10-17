@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const moment = require("moment");
 
 let Issue = require("./../models/issues.model");
 
@@ -6,6 +7,35 @@ router.route("/").get((req, res) => {
   Issue.find()
     .then(issues => res.json(issues))
     .catch(err => res.status(400).json("Error") + err);
+});
+
+router.route("/:id/comments/add").post((req, res) => {
+  let comment = req.body.comment;
+  let created_at = req.body.created_at;
+  let issue_id = req.body.issue_id;
+  let commentObj = { comment,created_at };
+
+  var options = { new: true };
+  Issue.findByIdAndUpdate(
+    issue_id,
+    {
+      $push: {
+        comments: {
+          $each: [commentObj]
+        }
+      }
+    },
+    options
+  )
+    .then(issue => {
+      res.status(201).json(issue);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({
+        error: "Could not add comment"
+      });
+    });
 });
 
 router.route("/:id").get((req, res) => {

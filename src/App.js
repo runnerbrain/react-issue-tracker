@@ -16,9 +16,6 @@ function App() {
   return (
     <div className="App">
       <div className="wrapper">
-        <div className="header">
-          <h1>Issue tracker</h1>
-        </div>
         <Router>
           <div className="navbar">
             <div className="leftLinks" style={linksStyle}>
