@@ -29,7 +29,7 @@ const CommentModal = ({
             close
           </i>
         </div>
-        <ModalHeader toggle={toggle}>{selectedIssue.title}</ModalHeader>
+        <ModalHeader toggle={toggle}>A title...</ModalHeader>
         <ModalBody className="modal-content">
           <form>
             <div>
