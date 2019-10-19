@@ -13,10 +13,10 @@ router.route("/:id/comments/add").post((req, res) => {
   let comment = req.body.comment;
   let created_at = req.body.created_at;
   let issue_id = req.body.issue_id;
-  let commentObj = { comment,created_at };
+  let commentObj = { comment: comment,created_at: created_at };
 
   var options = { new: true };
-  Issue.findByIdAndUpdate(
+  Issue.update(
     issue_id,
     {
       $push: {

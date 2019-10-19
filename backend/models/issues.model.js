@@ -2,6 +2,14 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
+const commentSchema = new Schema({
+    _id: {type: Schema.Types.ObjectId, required: true},
+        comment: String,
+        created_at: {type: Date, Default: Date.now}
+})
+
+const Comment = mongoose.model('Comment',commentSchema);
+
 const issueSchema = new Schema({
     title: {type: String, required: true},
     category: {type: String, required: true},
@@ -10,7 +18,7 @@ const issueSchema = new Schema({
     backup_contributor: {type: String, required: false},
     description: {type: String, required: true},
     comments: [{
-        _id: Schema.Types.ObjectId,
+        _id: {type: Schema.Types.ObjectId, required: true},
         comment: String,
         created_at: {type: Date, Default: Date.now}
     }]
