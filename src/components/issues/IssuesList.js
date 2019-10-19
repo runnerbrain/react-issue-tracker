@@ -66,7 +66,6 @@ class IssuesList extends Component {
       })
       .catch(err => console.log(err));
   }
-
   issuesList() {
     return this.state.issues.map(currentIssue => (
       <Issue
@@ -91,7 +90,6 @@ class IssuesList extends Component {
     this.setState(prevState => ({ modal: !prevState.modal }));
     if (!this.state.modal) {
       var selectedIssue= this.state.issues.find(el => el._id === id);
-      console.log(selectedIssue);
       this.setState({ comments: selectedIssue.comments });
       this.setState({ issue_id: id });
       this.setState({selectedIssue});
