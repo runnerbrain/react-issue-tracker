@@ -6,7 +6,8 @@ const commentSchema = new Schema({
     _id: {type: Schema.Types.ObjectId, required: true},
         comment: String,
         created_at: {type: Date, Default: Date.now}
-})
+},
+{_id: true})
 
 const Comment = mongoose.model('Comment',commentSchema);
 
@@ -17,11 +18,7 @@ const issueSchema = new Schema({
     lead_contributor: {type: String, required: false},
     backup_contributor: {type: String, required: false},
     description: {type: String, required: true},
-    comments: [{
-        _id: {type: Schema.Types.ObjectId, required: true},
-        comment: String,
-        created_at: {type: Date, Default: Date.now}
-    }]
+    comments: [{type: mongoose.Schema.Types.ObjectId, ref: 'Comment'}]
 
 })
 
