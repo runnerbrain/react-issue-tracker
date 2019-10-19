@@ -91,6 +91,7 @@ class IssuesList extends Component {
     this.setState(prevState => ({ modal: !prevState.modal }));
     if (!this.state.modal) {
       var selectedIssue= this.state.issues.find(el => el._id === id);
+      console.log(selectedIssue);
       this.setState({ comments: selectedIssue.comments });
       this.setState({ issue_id: id });
       this.setState({selectedIssue});

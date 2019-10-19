@@ -2,6 +2,7 @@ const router = require("express").Router();
 const moment = require("moment");
 
 let Issue = require("./../models/issues.model");
+let Comment = require('./../models/issues.model');
 
 router.route("/").get((req, res) => {
   Issue.find()
