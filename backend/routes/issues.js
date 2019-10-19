@@ -16,7 +16,7 @@ router.route("/:id/comments/add").post((req, res) => {
   let commentObj = { comment: comment,created_at: created_at };
 
   var options = { new: true };
-  Issue.update(
+  Issue.findByIdAndUpdate(
     issue_id,
     {
       $push: {
