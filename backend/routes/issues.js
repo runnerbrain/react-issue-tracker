@@ -1,59 +1,51 @@
 const router = require("express").Router();
 const moment = require("moment");
 
-let Models = require("./../models/issues.model");
+let Issue = require("./../models/issues.model");
 
 router.route("/").get((req, res) => {
-  Models.Issue.find()
+  Issue.find()
     .then(issues => res.json(issues))
     .catch(err => res.status(400).json("Error") + err);
 });
 
-router.route("/:id/comments/add").post((req,res) => {
-  console.log('in add route')
-  let comment = req.body.comment;
-  let created_at = req.body.created_at;
-  let issue_id = req.body.issue_id;
-  let newComment = new Models.Comment({ comment: comment,created_at: created_at, issue: issue_id });
 
-  newComment
-    .save()
-    .then(() => res.json("New issue added"))
-    .catch(err => res.status(400).json("Error me") + err);
-
+router.route("/:id/comments").get((req,res) => {
+  let issue_id = req.params.id;
+  Issue.find({_id: issue_id},{_id: 0, comments: 1})
+  .then(comments => res.json(comments))
+  .catch(err => res.status(400).json("Error ")+ err );
 })
 
-// router.route("/:id/comments/add").post((req, res) => {
-//   let comment = req.body.comment;
-//   let created_at = req.body.created_at;
-//   let issue_id = req.body.issue_id;
-//   let commentObj = { comment: comment,created_at: created_at };
+router.route("/:id/comments/add").post((req, res) => {
+  let issue_id = req.params.id;
+  let comment = req.body.comment;
+  let newComment = { comment };
 
-//   var options = { new: true };
-//   Models.Issue.findByIdAndUpdate(
-//     issue_id,
-//     {
-//       $push: {
-//         comments: {
-//           $each: [commentObj]
-//         }
-//       }
-//     },
-//     options
-//   )
-//     .then(issue => {
-//       res.status(201).json(issue);
-//     })
-//     .catch(err => {
-//       console.error(err);
-//       res.status(500).json({
-//         error: "Could not add comment"
-//       });
-//     });
-// });
+  var options = { new: true };
+  Issue.findByIdAndUpdate(issue_id,
+    {
+      $push: {
+        comments: {
+          $each: [newComment]
+        }
+      }
+    },
+    options
+  )
+    .then(issue => {
+      res.status(201).json(issue);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({
+        error: "Could not add comment"
+      });
+    });
+});
 
 router.route("/:id").get((req, res) => {
-  Models.Issue.findById(req.params.id)
+  Issue.findById(req.params.id)
     .then(issue => res.json(issue))
     .catch(err => res.status(400).json("Error fetching by Id: " + err));
 });
@@ -66,7 +58,7 @@ router.route("/add").post((req, res) => {
   const backup_contributor = req.body.backup_contributor;
   const description = req.body.description;
 
-  const newIssue = new Models.Issue({
+  const newIssue = new Issue({
     title,
     category,
     date_created,
@@ -83,7 +75,7 @@ router.route("/add").post((req, res) => {
 
 router.route("/edit/:id").put((req, res) => {
   console.log(`In edit route...${req.params.id}`);
-  Models.Issue.findById(req.params.id)
+  Issue.findById(req.params.id)
     .then(issue => {
       issue.title = req.body.title;
       issue.category = req.body.category;
@@ -101,7 +93,7 @@ router.route("/edit/:id").put((req, res) => {
 });
 
 router.route("/delete/:id").delete((req, res) => {
-  Models.Issue.findByIdAndDelete(req.params.id)
+  Issue.findByIdAndDelete(req.params.id)
     .then(() => res.json("Issue deleted.."))
     .catch(err => res.status(400).json("Error deleting -- " + err));
 });

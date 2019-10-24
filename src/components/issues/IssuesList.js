@@ -19,7 +19,13 @@ const Issue = props => {
           <i className="material-icons">edit</i>
         </Link>
         <Link to={`/issues`}>
-          <i className="material-icons" onClick={() => { if (window.confirm('Are you sure you wish to delete this item?'))deleteIssue(issue._id)}}>
+          <i
+            className="material-icons"
+            onClick={() => {
+              if (window.confirm("Are you sure you wish to delete this item?"))
+                deleteIssue(issue._id);
+            }}
+          >
             delete
           </i>
         </Link>
@@ -66,6 +72,7 @@ class IssuesList extends Component {
       })
       .catch(err => console.log(err));
   }
+
   issuesList() {
     return this.state.issues.map(currentIssue => (
       <Issue
@@ -87,12 +94,12 @@ class IssuesList extends Component {
   };
 
   showCommentForm = id => {
+    var selectedIssue = this.state.issues.find(el => el._id === id);
     this.setState(prevState => ({ modal: !prevState.modal }));
     if (!this.state.modal) {
-      var selectedIssue= this.state.issues.find(el => el._id === id);
       this.setState({ comments: selectedIssue.comments });
-      this.setState({ issue_id: id });
-      this.setState({selectedIssue});
+      this.setState({ issue_id: selectedIssue._id });
+      this.setState({ selectedIssue });
     }
   };
 
@@ -108,10 +115,16 @@ class IssuesList extends Component {
     )
       .then(res => {
         this.setState({ comments: res.data.comments });
+        let newIssuesList = [...this.state.issues];
+        let selectedIssuesIndex = newIssuesList.findIndex(
+           el => el._id === this.state.issue_id
+         );
+
+        newIssuesList[selectedIssuesIndex].comments = this.state.comments;
+       this.setState( {issues : newIssuesList});
         return res.data;
       })
       .catch(err => console.log("Error submitting comment: " + err));
-
   };
 
   render() {
@@ -141,7 +154,7 @@ class IssuesList extends Component {
             onTextAreaChange={this.handleTextAreaChange}
             showCommentForm={this.showCommentForm}
             onSaveComment={this.handleCommentSave}
-            selectedIssue = {this.state.selectedIssue}
+            selectedIssue={this.state.selectedIssue}
           />
         </div>
       </Fragment>

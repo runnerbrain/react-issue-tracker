@@ -4,8 +4,8 @@ const Schema = mongoose.Schema;
 
 const commentSchema = new Schema({
   comment: String,
-  created_at: { type: Date, Default: Date.now },
-  issue: {type: mongoose.Schema.Types.ObjectId, ref: 'Issue'}
+  createdAt: { type: Date, default: Date.now }
+  // issue: {type: mongoose.Schema.Types.ObjectId, ref: 'Issue'}
 });
 
 const Comment = mongoose.model("Comment", commentSchema);
@@ -17,9 +17,9 @@ const issueSchema = new Schema({
   lead_contributor: { type: String, required: false },
   backup_contributor: { type: String, required: false },
   description: { type: String, required: true },
-  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }]
+  comments: [commentSchema]
 });
 
 const Issue = mongoose.model("Issue", issueSchema);
 
-module.exports = { Issue: Issue, Comment: Comment };
+module.exports = Issue;
